@@ -52,4 +52,15 @@ public class TaskController : ControllerBase
     task.UpdatedAt = DateTime.Now;
     return Ok(task);
   }
+  [HttpDelete("{id}")]
+  public ActionResult DeleteTask(int id)
+  {
+    var task = TaskDataStore.Current.Tasks.FirstOrDefault(t => t.Id == id);
+    if (task == null)
+    {
+      return NotFound("No se encontró la tarea");
+    }
+    TaskDataStore.Current.Tasks.Remove(task);
+    return NoContent();
+  }
 }
