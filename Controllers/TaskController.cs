@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using TaskMasterAPI.Services;
 
@@ -37,5 +38,18 @@ public class TaskController : ControllerBase
     };
     TaskDataStore.Current.Tasks.Add(newTask);
     return Ok(newTask);
+  }
+  [HttpPut("{id}")]
+  public ActionResult<Models.Task> UpdateTask(int id, Models.TaskInsert taskInsert)
+  {
+    var task = TaskDataStore.Current.Tasks.FirstOrDefault(t => t.Id == id);
+    if (task == null)
+    {
+      return NotFound("No se encontró la tarea");
+    }
+    task.Title = taskInsert.Title;
+    task.Description = taskInsert.Description;
+    task.UpdatedAt = DateTime.Now;
+    return Ok(task);
   }
 }
